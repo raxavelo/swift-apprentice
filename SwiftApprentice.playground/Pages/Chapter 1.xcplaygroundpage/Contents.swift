@@ -2,6 +2,8 @@
 
 import Cocoa
 
+// Chapter 1: Expresions, Variables & Constants
+
 /*
  Challenge 1: Variables
  
