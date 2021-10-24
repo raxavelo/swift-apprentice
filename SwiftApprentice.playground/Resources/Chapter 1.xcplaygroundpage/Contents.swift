@@ -1,4 +1,4 @@
-
+//: [Previous](@previous)
 
 import Cocoa
 
@@ -145,4 +145,4 @@ let root1: Double = (-b - delta) / (2.0 * a)
 let root2: Double = (-b + delta) / (2.0 * a)
 
 
-//: [Next](@Chapter 2)
+//: [Next](@next)
