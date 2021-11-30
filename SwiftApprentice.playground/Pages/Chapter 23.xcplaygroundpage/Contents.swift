@@ -20,7 +20,7 @@ import Foundation
  }
  */
 
-struct Spaceship Codable{
+struct Spaceship: Codable {
   var name: String
   var crew: [CrewMember]
 }
@@ -29,4 +29,20 @@ struct CrewMember: Codable {
   var name: String
   var race: String
 }
+
+/*
+ Challenge 2: Custom keys
+ 
+ It appears that the spaceship’s interface is different than that of the outpost on Mars.
+ The Mars outpost expects to get the spaceship’s name as spaceship_name.
+ Make the necessary modifications so that encoding the structure would return the JSON in the correct format.
+ */
+
+extension Spaceship {
+  enum CodingKeys: String, CodingKey {
+    case name = "spaceship_name"
+    case crew
+  }
+}
+
 //: [Next](@next)
