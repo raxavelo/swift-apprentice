@@ -99,4 +99,40 @@ let decodedMessage = try PropertyListDecoder().decode(Spaceship.self, from: klin
 
 print(decodedMessage)
 
+/*
+ Challenge 5: Enumeration with associated values
+ 
+ The compiler can (as of Swift 5.5) automatically generate codable for enumerations with associated values.
+ Check out how it works by encoding and printing out the following list of items.
+ 
+ enum Item {
+   case message(String)
+   case numbers([Int])
+   case mixed(String, [Int])
+   case person(name: String)
+ }
+
+ let items: [Item] = [.message("Hi"),
+                      .mixed("Things", [1,2]),
+                      .person(name: "Kirk"),
+                      .message("Bye")]
+ */
+
+enum Item {
+  case message(String)
+  case numbers([Int])
+  case mixed(String, [Int])
+  case person(name: String)
+}
+
+let items: [Item] = [.message("Hi"),
+                     .mixed("Things", [1,2]),
+                     .person(name: "Kirk"),
+                     .message("Bye")]
+
+extension Item: Codable {}
+
+let encodedItems = try JSONEncoder().encode(items)
+print(String(data: encodedItems, encoding: .utf8)!)
+
 //: [Next](@next)
