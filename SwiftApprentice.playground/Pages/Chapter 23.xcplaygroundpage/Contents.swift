@@ -70,10 +70,33 @@ extension Spaceship {
     let values = try decoder.container(keyedBy: CodingKeys.self)
     name = try values.decode(String.self, forKey: .name)
     let crewValues = try decoder.container(keyedBy: CrewKeys.self)
-    let captain = try crewValues.decode(CrewMember.self, forKey: .captain)
-    let officer = try crewValues.decode(CrewMember.self, forKey: .officer)
+    let captain = try crewValues.decodeIfPresent(CrewMember.self, forKey: .captain)
+    let officer = try crewValues.decodeIfPresent(CrewMember.self, forKey: .officer)
     crew = [captain, officer].compactMap() { $0 }
   }
 }
+
+let transmission = "{\"spaceship_name\":\"USS Enterprise\", \"captain\":{\"name\":\"Spock\", \"race\":\"Human\"}, \"officer\":{\"name\": \"Worf\", \"race\":\"Klingon\"}}"
+
+let enterprise = try JSONDecoder().decode(Spaceship.self, from: transmission.data(using: .utf8)!)
+print(enterprise)
+
+/*
+ Challenge 4: Decoding property lists
+ 
+ You intercepted some weird transmissions from the Klingon, which you can’t decode.
+ Your scientists deduced that these transmissions are encoded with a PropertyListEncoder
+ and that they’re also information about spaceships.
+ Try your luck with decoding this message:
+ 
+ var klingonSpaceship = Spaceship(name: "IKS NEGH’VAR", crew: [])
+ let klingonMessage = try PropertyListEncoder().encode(klingonSpaceship)
+ */
+
+var klingonSpaceship = Spaceship(name: "IKS NEGH’VAR", crew: [])
+let klingonMessage = try PropertyListEncoder().encode(klingonSpaceship)
+let decodedMessage = try PropertyListDecoder().decode(Spaceship.self, from: klingonMessage)
+
+print(decodedMessage)
 
 //: [Next](@next)
