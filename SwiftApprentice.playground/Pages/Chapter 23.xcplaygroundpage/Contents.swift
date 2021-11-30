@@ -45,4 +45,35 @@ extension Spaceship {
   }
 }
 
+/*
+ Challenge 3: Write a decoder
+ 
+ You received a transmission from planet Earth about a new spaceship.
+ Write a custom decoder to convert this JSON into a Spaceship.
+ This is the incoming transmission:
+ 
+ {"spaceship_name":"USS Enterprise", "captain":{"name":"Spock", "race":"Human"}, "officer":{"name": "Worf", "race":"Klingon"}}
+
+ Hint: There are no ranks in your type, just an array of crew members,
+ so you’ll need to use different keys for encoding and decoding.
+ */
+
+extension Spaceship {
+  enum CrewKeys: String, CodingKey {
+    case captain
+    case officer
+  }
+}
+
+extension Spaceship {
+  init(from decoder: Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    name = try values.decode(String.self, forKey: .name)
+    let crewValues = try decoder.container(keyedBy: CrewKeys.self)
+    let captain = try crewValues.decode(CrewMember.self, forKey: .captain)
+    let officer = try crewValues.decode(CrewMember.self, forKey: .officer)
+    crew = [captain, officer].compactMap() { $0 }
+  }
+}
+
 //: [Next](@next)
