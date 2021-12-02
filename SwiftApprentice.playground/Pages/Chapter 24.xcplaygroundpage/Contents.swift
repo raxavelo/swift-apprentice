@@ -68,7 +68,7 @@ class Person {
 class Car {
   let id: Int
   let type: String
-  unowned var owner: Person?
+  var owner: Person?
 
  init(id: Int, type: String) {
    self.id = id
@@ -90,5 +90,92 @@ car?.owner = owner
 owner = nil
 car = nil
 
+/*
+ Challenge 2: Break another cycle
+ 
+ Break the strong reference cycle in the following code:
+ 
+ class Customer {
+   let name: String
+   let email: String
+   var account: Account?
+
+   init(name: String, email: String) {
+     self.name = name
+     self.email = email
+   }
+
+   deinit {
+     print("Goodbye \(name)!")
+   }
+ }
+
+ class Account {
+   let number: Int
+   let type: String
+   let customer: Customer
+
+   init(number: Int, type: String, customer: Customer) {
+     self.number = number
+     self.type = type
+     self.customer = customer
+   }
+
+   deinit {
+     print("Goodbye \(type) account number \(number)!")
+   }
+ }
+
+ var customer: Customer? = Customer(name: "George",
+                                    email: "george@whatever.com")
+ var account: Account? = Account(number: 10, type: "PayPal",
+                                 customer: customer!)
+
+ customer?.account = account
+
+ account = nil
+ customer = nil
+ */
+
+class Customer {
+  let name: String
+  let email: String
+  var account: Account?
+
+  init(name: String, email: String) {
+    self.name = name
+    self.email = email
+  }
+
+  deinit {
+    print("Goodbye \(name)!")
+  }
+}
+
+class Account {
+  let number: Int
+  let type: String
+  unowned let customer: Customer
+
+  init(number: Int, type: String, customer: Customer) {
+    self.number = number
+    self.type = type
+    self.customer = customer
+  }
+
+  deinit {
+    print("Goodbye \(type) account number \(number)!")
+  }
+}
+
+var customer: Customer? = Customer(name: "George",
+                                   email: "george@whatever.com")
+var account: Account? = Account(number: 10, type: "PayPal",
+                                customer: customer!)
+
+customer?.account = account
+
+account = nil
+customer = nil
 
 //: [Next](@next)
