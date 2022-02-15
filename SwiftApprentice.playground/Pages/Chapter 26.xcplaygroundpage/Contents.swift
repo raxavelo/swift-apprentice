@@ -106,4 +106,50 @@ struct CopyOnWrite<T> {
  }
  */
 
+protocol DeepCopyable {
+
+  /* Returns a deep copy of the current instance.
+
+     If `x` is a deep copy of `y`, then:
+        - The instance `x` should have the same value as `y`
+          (for some sensible definition of value – not just
+          memory location or pointer equality!)
+        - It should be impossible to do any operation on `x`
+          that will modify the value of the instance `y`.
+
+    Note: A value semantic type implementing this protocol can just
+          return `self` since that fulfills the above requirement.
+  */
+
+  func deepCopy() -> Self
+}
+
+@propertyWrapper
+struct ValueSemantic<T: DeepCopyable> {
+  private var storage: StorageBox<T>
+  
+  init(wrappedValue: T) {
+    storage = StorageBox(wrappedValue.deepCopy())
+  }
+  
+  var wrappedValue: T {
+    mutating get {
+      if isKnownUniquelyReferenced(&storage) {
+        return storage.value
+      } else {
+        storage = StorageBox(storage.value.deepCopy())
+        return storage.value
+      }
+    }
+    
+    set {
+      if isKnownUniquelyReferenced(&storage) {
+        storage.value = newValue
+      } else {
+        storage = StorageBox(newValue.deepCopy())
+      }
+    }
+  }
+}
+
 //: [Next](@next)
